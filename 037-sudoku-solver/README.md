@@ -1,4 +1,4 @@
-#  37. Sudoku Solver
+<h2><a href="https://leetcode.com/problems/sudoku-solver">37. Sudoku Solver</a></h2><h3>Hard</h3><hr><p>Write a program to solve a Sudoku puzzle by filling the empty cells.</p>
 
 **Difficulty:** Hard  
 
