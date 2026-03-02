@@ -1,32 +1,95 @@
-<h2><a href="https://leetcode.com/problems/sudoku-solver">37. Sudoku Solver</a></h2><h3>Hard</h3><hr><p>Write a program to solve a Sudoku puzzle by filling the empty cells.</p>
+#  37. Sudoku Solver
 
-<p>A sudoku solution must satisfy <strong>all of the following rules</strong>:</p>
+**Difficulty:** Hard  
 
-<ol>
-	<li>Each of the digits <code>1-9</code> must occur exactly once in each row.</li>
-	<li>Each of the digits <code>1-9</code> must occur exactly once in each column.</li>
-	<li>Each of the digits <code>1-9</code> must occur exactly once in each of the 9 <code>3x3</code> sub-boxes of the grid.</li>
-</ol>
+Write a program to solve a Sudoku puzzle by filling the empty cells.
 
-<p>The <code>&#39;.&#39;</code> character indicates empty cells.</p>
+A Sudoku solution must satisfy all of the following rules:
 
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/250px-Sudoku-by-L2G-20050714.svg.png" style="height:250px; width:250px" />
-<pre>
-<strong>Input:</strong> board = [[&quot;5&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],[&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;,&quot;9&quot;,&quot;5&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],[&quot;.&quot;,&quot;9&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;],[&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;3&quot;],[&quot;4&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;],[&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;],[&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;8&quot;,&quot;.&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;4&quot;,&quot;1&quot;,&quot;9&quot;,&quot;.&quot;,&quot;.&quot;,&quot;5&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;9&quot;]]
-<strong>Output:</strong> [[&quot;5&quot;,&quot;3&quot;,&quot;4&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;1&quot;,&quot;2&quot;],[&quot;6&quot;,&quot;7&quot;,&quot;2&quot;,&quot;1&quot;,&quot;9&quot;,&quot;5&quot;,&quot;3&quot;,&quot;4&quot;,&quot;8&quot;],[&quot;1&quot;,&quot;9&quot;,&quot;8&quot;,&quot;3&quot;,&quot;4&quot;,&quot;2&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;],[&quot;8&quot;,&quot;5&quot;,&quot;9&quot;,&quot;7&quot;,&quot;6&quot;,&quot;1&quot;,&quot;4&quot;,&quot;2&quot;,&quot;3&quot;],[&quot;4&quot;,&quot;2&quot;,&quot;6&quot;,&quot;8&quot;,&quot;5&quot;,&quot;3&quot;,&quot;7&quot;,&quot;9&quot;,&quot;1&quot;],[&quot;7&quot;,&quot;1&quot;,&quot;3&quot;,&quot;9&quot;,&quot;2&quot;,&quot;4&quot;,&quot;8&quot;,&quot;5&quot;,&quot;6&quot;],[&quot;9&quot;,&quot;6&quot;,&quot;1&quot;,&quot;5&quot;,&quot;3&quot;,&quot;7&quot;,&quot;2&quot;,&quot;8&quot;,&quot;4&quot;],[&quot;2&quot;,&quot;8&quot;,&quot;7&quot;,&quot;4&quot;,&quot;1&quot;,&quot;9&quot;,&quot;6&quot;,&quot;3&quot;,&quot;5&quot;],[&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;2&quot;,&quot;8&quot;,&quot;6&quot;,&quot;1&quot;,&quot;7&quot;,&quot;9&quot;]]
-<strong>Explanation:</strong>&nbsp;The input board is shown above and the only valid solution is shown below:
+1. Each digit `1-9` must occur exactly once in each row.
+2. Each digit `1-9` must occur exactly once in each column.
+3. Each digit `1-9` must occur exactly once in each of the nine `3x3` sub-boxes of the grid.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Sudoku-by-L2G-20050714_solution.svg/250px-Sudoku-by-L2G-20050714_solution.svg.png" style="height:250px; width:250px" />
-</pre>
+The `'.'` character indicates empty cells.
 
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
+---
 
-<ul>
-	<li><code>board.length == 9</code></li>
-	<li><code>board[i].length == 9</code></li>
-	<li><code>board[i][j]</code> is a digit or <code>&#39;.&#39;</code>.</li>
-	<li>It is <strong>guaranteed</strong> that the input board has only one solution.</li>
-</ul>
+##  Example
+
+### Input
+
+```python
+board = [
+ ["5","3",".",".","7",".",".",".","."],
+ ["6",".",".","1","9","5",".",".","."],
+ [".","9","8",".",".",".",".","6","."],
+ ["8",".",".",".","6",".",".",".","3"],
+ ["4",".",".","8",".","3",".",".","1"],
+ ["7",".",".",".","2",".",".",".","6"],
+ [".","6",".",".",".",".","2","8","."],
+ [".",".",".","4","1","9",".",".","5"],
+ [".",".",".",".","8",".",".","7","9"]
+]
+```
+
+### Output
+
+```python
+[
+ ["5","3","4","6","7","8","9","1","2"],
+ ["6","7","2","1","9","5","3","4","8"],
+ ["1","9","8","3","4","2","5","6","7"],
+ ["8","5","9","7","6","1","4","2","3"],
+ ["4","2","6","8","5","3","7","9","1"],
+ ["7","1","3","9","2","4","8","5","6"],
+ ["9","6","1","5","3","7","2","8","4"],
+ ["2","8","7","4","1","9","6","3","5"],
+ ["3","4","5","2","8","6","1","7","9"]
+]
+```
+
+---
+
+##  Approach
+
+We use the **Backtracking Algorithm**.
+
+### Steps:
+
+1. Traverse the board cell by cell.
+2. If an empty cell (`'.'`) is found:
+   - Try placing digits from `1` to `9`.
+   - Check if the placement is valid.
+   - If valid → place it and recurse.
+   - If not valid → try next digit.
+   - If no digit works → backtrack.
+3. Continue until the board is completely filled.
+
+---
+
+
+
+
+---
+
+##  Time Complexity
+
+Worst case: `O(9^(n²))`
+
+Backtracking explores possibilities but constraint checking reduces unnecessary recursion.
+
+---
+
+##📦 Space Complexity
+
+- O(1) extra space (in-place modification)
+- O(n²) recursion stack in worst case
+
+---
+
+##  Concepts Used
+
+- Recursion
+- Backtracking
+- Matrix Traversal
+- Constraint Validation
