@@ -31,6 +31,9 @@
 <p>&nbsp;</p>
 <p><strong>Constraints:</strong></p>
 
+---
+
+
 <ul>
 	<li><code>-2<sup>31</sup> &lt;=&nbsp;numerator, denominator &lt;= 2<sup>31</sup> - 1</code></li>
 	<li><code>denominator != 0</code></li>
