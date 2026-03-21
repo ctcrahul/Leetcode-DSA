@@ -36,5 +36,7 @@ No two adjacent strings in words are anagrams of each other, so no operations ar
 <ul>
 	<li><code>1 &lt;= words.length &lt;= 100</code></li>
 	<li><code>1 &lt;= words[i].length &lt;= 10</code></li>
-	<li><code>words[i]</code> consists of lowercase English letters.</li>
+	<li><code>words[i]</code> consists of lowercase English letters...</li>
 </ul>
+
+
