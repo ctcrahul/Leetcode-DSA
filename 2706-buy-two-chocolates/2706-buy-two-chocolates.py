@@ -1,19 +1,13 @@
 class Solution:
-    def buyTwoChocolates(self, prices: list[int], money: int) -> int:
-        
-        cheapest = 101
-        second_cheapest = 101
-        
-        for price in prices:
-            if price < cheapest:
-                second_cheapest = cheapest
-                cheapest = price
-            elif price < second_cheapest:
-                second_cheapest = price
+    def buyChoco(self, prices: List[int], money: int) -> int:
+        first_min_cost = second_min_cost = float("inf")
 
-        min_cost = cheapest + second_cheapest
-        
-        if min_cost <= money:
-            return money - min_cost
-        else:
-            return money
+        for p in prices:
+            if p < first_min_cost:
+                second_min_cost, first_min_cost = first_min_cost, p
+            else:
+                second_min_cost = min(second_min_cost, p)
+
+        leftover = money - (first_min_cost + second_min_cost)
+
+        return leftover if leftover >= 0 else money
