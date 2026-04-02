@@ -1,3 +1,4 @@
+
 class Solution:
     def maxIncreasingSubarrays(self, nums: List[int]) -> int:
         n, Len, prev, k=len(nums), 1, 0, 0
@@ -9,3 +10,6 @@ class Solution:
                 Len=1
         return max(k, Len//2, min(Len, prev))
         
+
+# Please Suppoert//
+/
