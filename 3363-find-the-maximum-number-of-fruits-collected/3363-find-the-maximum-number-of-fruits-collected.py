@@ -1,3 +1,6 @@
+#Python 3.
+//
+
 class Solution(object):
     def maxCollectedFruits(self, grid):
         n = len(grid); res = 0
