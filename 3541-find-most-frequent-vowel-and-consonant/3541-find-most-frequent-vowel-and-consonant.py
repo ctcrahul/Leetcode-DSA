@@ -10,3 +10,4 @@ class Solution(object):
             else:
                 maxConso = max(maxConso, freq[i])
         return maxVowel + maxConso
+## Python ANd TOmorrow my maaths paper
