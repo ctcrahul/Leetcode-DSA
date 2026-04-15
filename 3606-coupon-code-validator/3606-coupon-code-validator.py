@@ -21,3 +21,6 @@ class Solution:
             if bl[0] == 'r': r.append(code[i])
 
         return sorted(e) + sorted(g) + sorted(p) + sorted(r)
+
+
+# 333333333## Python 
