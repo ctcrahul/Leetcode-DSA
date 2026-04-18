@@ -9,3 +9,4 @@ class Solution:
             seen[int(str(n)[::-1])] = i
 
         return -(res == 100000) | res
+,,,
