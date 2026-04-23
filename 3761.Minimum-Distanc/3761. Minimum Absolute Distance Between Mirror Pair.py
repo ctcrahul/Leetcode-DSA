@@ -12,3 +12,5 @@ class Solution:
 ,,,
 
 ////////////////////
+///
+24 i have last practical on that day
