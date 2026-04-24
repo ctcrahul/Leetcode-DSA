@@ -148,9 +148,3 @@ Practice:
 
 ---
 
-If you want, I’ll give you:
-
-* 🔥 3 harder variants of this exact pattern
-* 🔥 or a trick to reduce memory further
-
-But don’t move on until you actually understand WHY `(xor, balance)` works.
