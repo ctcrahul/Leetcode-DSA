@@ -1,5 +1,38 @@
 ## Python
 
+class Solution {
+public:
+    int minimumMultiplications(vector<int>& arr, int start, int end) {
+
+        vector<int> dist(100000, 1e9);
+        queue<pair<int,int>> q;
+
+        q.push({start, 0});
+        dist[start] = 0;
+
+        while(!q.empty()){
+
+            int num = q.front().first;
+            int steps = q.front().second;
+
+            q.pop();
+
+            if(num == end)
+                return steps;
+
+            for(int x : arr){
+
+                int next = (num * x) % 100000;
+
+                if(steps + 1 < dist[next]){
+                    dist[next] = steps + 1;
+                    q.push({next, steps + 1});
+                }
+            }
+        }
+        return -1;
+    }
+};
 from collections import deque
 
 class Solution:
