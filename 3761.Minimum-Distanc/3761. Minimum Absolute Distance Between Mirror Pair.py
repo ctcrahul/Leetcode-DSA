@@ -1,3 +1,35 @@
+class Solution {
+  public:
+  void dfs(Node* root,int key,map<int,int> &mp){
+      if(!root)return ;
+      mp[key]+=root->data;
+      dfs(root->left,key-1,mp);
+      dfs(root->right,key+1,mp);
+  }
+    vector<int> verticalSum(Node* root) {
+        // code here
+        vector<int> ans;
+        map<int,int> mp;
+        dfs(root,0,mp);
+        for(auto i:mp){
+            ans.push_back(i.second);
+        }
+        return ans;
+    }
+};
+ 
+
+..... see less
+
+0
+
+Reply
+User
+Nitin Bhattar
+1 hour agoMay 28, 2026 19:51 (GMT +5:30)
+
+Easiest So
+
 class TrieNode:
     __slots__ = ['children', 'bestLen', 'bestIdx']
     
