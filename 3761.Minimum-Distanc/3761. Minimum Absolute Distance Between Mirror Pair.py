@@ -1,3 +1,703 @@
+
+
+class Solution {
+  public:
+    void replaceElements(vector<int>& arr) {
+        // code here
+        int n = (int)arr.size();
+        
+        arr[0] = arr[0] ^ arr[1];
+        int s = 0 ;
+        s = s ^ arr[0];
+        for(int i = 1;(i+1)<n;i++)
+        {
+            arr[i] = (arr[i] ^ s ^ arr[i+1]);
+            s^=arr[i];
+        }
+        
+        arr[n-1] = s ;
+        
+        
+    }
+};
+
+
+class Solution {
+public:
+
+    vector<int> seg;
+    const int MAXX = 50000;
+
+    void update(int node, int l, int r, int idx, int val) {
+        if (l == r) {
+            seg[node] = val;
+            return;
+        }
+
+        int mid = (l + r) / 2;
+
+        if (idx <= mid)
+            update(2 * node, l, mid, idx, val);
+        else
+            update(2 * node + 1, mid + 1, r, idx, val);
+
+        seg[node] = max(seg[2 * node], seg[2 * node + 1]);
+    }
+
+    int query(int node, int l, int r, int ql, int qr) {
+        if (ql > r || qr < l)
+            return 0;
+
+        if (ql <= l && r <= qr)
+            return seg[node];
+
+        int mid = (l + r) / 2;
+
+        return max(
+            query(2 * node, l, mid, ql, qr),
+            query(2 * node + 1, mid + 1, r, ql, qr)
+        );
+    }
+
+    vector<bool> getResults(vector<vector<int>>& queries) {
+
+        seg.resize(4 * (MAXX + 1), 0);
+
+        set<int> obstacles;
+        obstacles.insert(0);
+
+        // Build final obstacle configuration
+        for (auto &q : queries) {
+            if (q[0] == 1) obstacles.insert(q[1]);
+        }
+
+        vector<int> pos(obstacles.begin(), obstacles.end());
+        // at pos[i] we have a gap of (pos[i] - pos[i - 1]) which we are storing
+        // in the segment tree
+        for (int i = 1; i < (int)pos.size(); i++) {
+            update(1,0,MAXX,pos[i],pos[i] - pos[i - 1]);
+        }
+
+        vector<bool> ans;
+
+        for (int i = (int)queries.size() - 1; i >= 0; i--) {
+
+            if (queries[i][0] == 2) {
+
+                int x = queries[i][1];
+                int sz = queries[i][2];
+                // find a prev obstacle lesser than x, then we can fit the block
+                //before prev or between prev to x
+                auto it = prev(obstacles.upper_bound(x));
+
+                int prevObstacle = *it;
+                int best = query(1,0,MAXX,0,prevObstacle);
+
+                best = max(best, x - prevObstacle);
+                ans.push_back(best >= sz);
+            }
+            else {
+
+                int x = queries[i][1]; // so we now remove x obstacle
+                auto it = obstacles.find(x);
+                int leftPos = *prev(it); //left of x
+
+                update(1,0,MAXX,x,0); // update gap at x to 0 or remove gap ending at x
+
+                auto rightIt = next(it);
+
+                if (rightIt != obstacles.end()) {
+                    int rightPos = *rightIt;
+                    // merging the interval from leftpos to rightpos as one single gap
+                    update(1,0,MAXX,rightPos,rightPos - leftPos);
+                }
+
+                obstacles.erase(it);
+            }
+        }
+
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+
+class Solution:
+
+    MAXX = 50000
+
+    def __init__(self):
+        self.seg = [0] * (4 * (self.MAXX + 1))
+
+    def update(self, node, l, r, idx, val):
+        if l == r:
+            self.seg[node] = val
+            return
+
+        mid = (l + r) // 2
+
+        if idx <= mid:
+            self.update(2 * node, l, mid, idx, val)
+        else:
+            self.update(2 * node + 1, mid + 1, r, idx, val)
+
+        self.seg[node] = max(
+            self.seg[2 * node],
+            self.seg[2 * node + 1]
+        )
+
+    def query(self, node, l, r, ql, qr):
+        if ql > r or qr < l:
+            return 0
+
+        if ql <= l and r <= qr:
+            return self.seg[node]
+
+        mid = (l + r) // 2
+
+        return max(
+            self.query(2 * node, l, mid, ql, qr),
+            self.query(2 * node + 1, mid + 1, r, ql, qr)
+        )
+
+    def getResults(self, queries: List[List[int]]) -> List[bool]:
+        
+        obstacles = SortedSet([0])
+
+        # Build final obstacle configuration
+        for q in queries:
+            if q[0] == 1:
+                obstacles.add(q[1])
+
+        pos = list(obstacles)
+
+        # gap[pos[i]] = pos[i] - pos[i-1]
+        for i in range(1, len(pos)):
+            self.update(1,0,self.MAXX,pos[i],pos[i] - pos[i - 1])
+
+        ans = []
+
+        for i in range(len(queries) - 1, -1, -1):
+
+            if queries[i][0] == 2:
+
+                x = queries[i][1]
+                sz = queries[i][2]
+
+                idx = obstacles.bisect_right(x) - 1
+                prev_obstacle = obstacles[idx]
+
+                best = self.query(1,0,self.MAXX,0,prev_obstacle)
+                best = max(best, x - prev_obstacle)
+
+                ans.append(best >= sz)
+
+            else:
+
+                x = queries[i][1]
+
+                idx = obstacles.index(x)
+                left_pos = obstacles[idx - 1]
+
+                # remove gap ending at x
+                self.update(1,0,self.MAXX,x,0)
+
+                if idx + 1 < len(obstacles):
+                    right_pos = obstacles[idx + 1]
+                    # merge gaps
+                    self.update(1,0,self.MAXX,right_pos,right_pos - left_pos)
+
+                obstacles.remove(x)
+
+        return ans[::-1]
+        
+
+class Solution {
+    struct TrieNode {
+        int children[26];
+        int bestLen;
+        int bestIdx;
+        
+        TrieNode() {
+            fill(begin(children), end(children), -1);
+            bestLen = 1e9;
+            bestIdx = 1e9;
+        }
+    };
+
+public:
+    vector<int> stringIndices(vector<string>& wordsContainer, vector<string>& wordsQuery) {
+        vector<TrieNode> trie;
+        trie.emplace_back();
+        
+        for (int i = 0; i < wordsContainer.size(); i++) {
+            int len = wordsContainer[i].length();
+            int curr = 0;
+            
+            if (len < trie[curr].bestLen || (len == trie[curr].bestLen && i < trie[curr].bestIdx)) {
+                trie[curr].bestLen = len;
+                trie[curr].bestIdx = i;
+            }
+            
+            for (int j = len - 1; j >= 0; j--) {
+                int charIdx = wordsContainer[i][j] - 'a';
+                
+                if (trie[curr].children[charIdx] == -1) {
+                    trie[curr].children[charIdx] = trie.size();
+                    trie.emplace_back();
+                }
+                
+                curr = trie[curr].children[charIdx];
+                
+                if (len < trie[curr].bestLen || (len == trie[curr].bestLen && i < trie[curr].bestIdx)) {
+                    trie[curr].bestLen = len;
+                    trie[curr].bestIdx = i;
+                }
+            }
+        }
+        
+        vector<int> ans;
+        ans.reserve(wordsQuery.size());
+        
+        for (const string& query : wordsQuery) {
+            int curr = 0;
+            int len = query.length();
+            
+            for (int j = len - 1; j >= 0; j--) {
+                int charIdx = query[j] - 'a';
+                if (trie[curr].children[charIdx] == -1) {
+                    break;
+                }
+                curr = trie[curr].children[charIdx];
+            }
+            ans.push_back(trie[curr].bestIdx);
+        }
+        
+        return ans;
+    }
+}; 
+
+class Solution {
+  public:
+  void dfs(Node* root,int key,map<int,int> &mp){
+      if(!root)return ;
+      mp[key]+=root->data;
+      dfs(root->left,key-1,mp);
+      dfs(root->right,key+1,mp);
+  }
+    vector<int> verticalSum(Node* root) {
+        // code here
+        vector<int> ans;
+        map<int,int> mp;
+        dfs(root,0,mp);
+        for(auto i:mp){
+            ans.push_back(i.second);
+        }
+        return ans;
+    }
+};
+ 
+
+..... see less
+
+0
+
+Reply
+User
+Nitin Bhattar
+1 hour agoMay 28, 2026 19:51 (GMT +5:30)
+
+Easiest So
+
+class TrieNode:
+    __slots__ = ['children', 'bestLen', 'bestIdx']
+    
+    def __init__(self):
+        self.children = {}
+        self.bestLen = float('inf')
+        self.bestIdx = float('inf')
+
+class Solution:
+    def stringIndices(self, wordsContainer: List[str], wordsQuery: List[str]) -> List[int]:
+        root = TrieNode()
+        
+        for i, word in enumerate(wordsContainer):
+            n = len(word)
+            curr = root
+            
+            if n < curr.bestLen or (n == curr.bestLen and i < curr.bestIdx):
+                curr.bestLen = n
+                curr.bestIdx = i
+                
+            for char in reversed(word):
+                if char not in curr.children:
+                    curr.children[char] = TrieNode()
+                
+                curr = curr.children[char]
+                
+                if n < curr.bestLen or (n == curr.bestLen and i < curr.bestIdx):
+                    curr.bestLen = n
+                    curr.bestIdx = i
+                    
+        ans = []
+        
+        for query in wordsQuery:
+            curr = root
+            
+            for char in reversed(query):
+                if char not in curr.children:
+                    break
+                curr = curr.children[char]
+            
+            ans.append(curr.bestIdx)
+            
+        return ans
+
+class Solution:
+    def canReach(self, s: str, minJ: int, maxJ: int) -> bool:
+        n = len(s)
+
+        if int(s[-1]): return False
+
+        dp = [False] * n
+        dp[0] = True
+        reach, maxR = 0, maxJ
+
+        for i in range(minJ, n):
+            if i > maxR: return False
+
+            reach += dp[i - minJ]
+
+            if i > maxJ:
+                reach -= dp[i - maxJ - 1]
+
+            if reach and not int(s[i]):
+                dp[i] = True
+                maxR = i + maxJ
+
+        return reach > 0https://github.com/ctcrahul
+        
+
+class Solution:
+    def canReach(self, s: str, minJ: int, maxJ: int) -> bool:
+        n = len(s)
+
+        if int(s[-1]): return False
+
+        dp = [False] * n
+        dp[0] = True
+        reach, maxR = 0, maxJ
+
+        for i in range(minJ, n):
+            if i > maxR: return False
+
+            reach += dp[i - minJ]
+
+            if i > maxJ:
+                reach -= dp[i - maxJ - 1]
+
+            if reach and not int(s[i]):
+                dp[i] = True
+                maxR = i + maxJ
+
+        return reach > 0
+
+class Solution {
+public:
+    bool canReach(string s, int minJ, int maxJ) {
+        int n = s.length();
+
+        if (s.back() & 1) return false;
+
+        s[0] = 'v';
+        int reach = 0, maxR = maxJ;
+
+        for (int i = minJ; i < n; i++) {
+            if (i > maxR) return false;
+
+            reach += s[i - minJ] == 'v';
+            reach -= (i > maxJ) && s[i - maxJ - 1] == 'v';
+
+            if (reach && (~s[i] & 1)) {
+                s[i] = 'v';
+                maxR = i + maxJ;
+            }
+        }
+
+        return reach;
+    }
+};
+
+class Solution {
+public:
+    bool canReach(string s, int minJ, int maxJ) {
+        int n = s.length();
+
+        if (s.back() & 1) return false;
+
+        s[0] = 'v';
+        int reach = 0, maxR = maxJ;
+
+        for (int i = minJ; i < n; i++) {
+            if (i > maxR) return false;
+
+            reach += s[i - minJ] == 'v';
+            reach -= (i > maxJ) && s[i - maxJ - 1] == 'v';
+
+            if (reach && (~s[i] & 1)) {
+                s[i] = 'v';
+                maxR = i + maxJ;
+            }
+        }
+
+        return reach;
+    }
+};
+
+
+const canReach = (s, min, max, n = s.length) => {
+    if (s.at(-1) & 1) return false;
+
+    const dp = Array(n).fill(false);
+    dp[0] = true;
+    let reach = 0;
+    let maxR = max;
+
+    for (let i = min; i < n; i++) {
+        if (i > maxR) return false;
+
+        reach += dp[i - min];
+        reach -= (i > max) && dp[i - max - 1];
+
+        if (reach && !(s[i] & 1)) {
+            dp[i] = true;
+            maxR = i + max;
+        }
+    }
+
+    return reach;
+};
+
+class Solution:
+    def maxJumps(self, arr: list[int], d: int) -> int:
+        n = len(arr)
+        dp = [-1] * n
+
+        def dfs(i):
+            if dp[i] != -1:
+                return dp[i]
+
+            best = 1
+
+            # Right scan
+            for nxt in range(i + 1, min(n, i + d + 1)):
+                if arr[nxt] >= arr[i]:
+                    break
+
+                best = max(best, 1 + dfs(nxt))
+
+            # Left scan
+            for nxt in range(i - 1, max(-1, i - d - 1), -1):
+                if arr[nxt] >= arr[i]:
+                    break
+
+                best = max(best, 1 + dfs(nxt))
+
+            dp[i] = best
+            return dp[i]
+
+        return max(dfs(i) for i in range(n))
+
+class Solution {
+public:
+
+int coin(vector<int> &arr) {
+    int i = 0;
+    int j = arr.size() - 1;
+    
+    while(i < j) {
+        if(arr[i] >= arr[j]) {
+            i++;
+        }
+        else {
+            j--;
+        }
+    }
+    
+    return arr[i];
+}
+
+};
+
+
+struct Edge{
+    int to, nxt=-1;
+};
+
+constexpr int V=1000;
+constexpr int E=V*2;
+
+Edge POOL[E];
+int idx=0;
+
+int adj[V], deg[V];
+int dp[V];
+
+int q[V];// for queue holding idx
+int front, back;
+
+inline void addEdge(int u, int v){
+    POOL[idx]={v, adj[u]};
+    adj[u]=idx++;
+    deg[v]++;
+}
+int Stack[V], top=-1;
+
+class Solution {
+public:
+    static int maxJumps(vector<int>& arr, int d) {
+        const int n=arr.size();
+        // reset
+        idx=0;
+        memset(adj, -1, n*sizeof(int));
+        memset(deg, 0, n*sizeof(int));
+        fill(dp, dp+n, 1);
+        // montonone stack
+        top=-1;// clear stack
+        for(int i=0; i<n; i++){
+            const int x=arr[i];
+            while(top>-1 && arr[Stack[top]]<x){
+                int j=Stack[top--];
+                if (i-j<=d) addEdge(j, i);
+            }
+            Stack[++top]=i;
+        }
+        top=-1;// clear Stack
+        for(int i=n-1; i>=0; i--){
+            const int x=arr[i];
+            while(top>-1 && arr[Stack[top]]<x){
+                int j=Stack[top--];
+                if (j-i<=d) addEdge(j, i);
+            }
+            Stack[++top]=i;
+        }
+
+        front=back= 0;// reset for q
+        for(int i=0; i<n; i++)// Push i to q if deg[i]=0
+            if(deg[i]==0)
+                q[back++]=i;
+
+        while(front<back){
+            int u=q[front++];
+            for(int e=adj[u]; e!=-1; e=POOL[e].nxt){
+                int v=POOL[e].to;
+                dp[v]=max(dp[v], dp[u]+1);
+                if(--deg[v]==0)
+                    q[back++]=v;
+            }
+        }
+
+        return *max_element(dp, dp+n);
+    }
+};
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int n = nums.size();
+        int lo = 0, hi = n - 1;
+
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (nums[mid] > nums.back()) lo = mid + 1;
+            else hi = mid;
+        }
+
+        int rot = lo;
+        lo = 0, hi = n - 1;
+
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            int real = (mid + rot) % n;
+
+            if (nums[real] == target)
+                return real;
+
+            if (nums[real] < target) lo = mid + 1;
+            else hi = mid - 1;
+        }
+
+        return -1;
+    }
+};
+
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        n = len(nums)
+        rot = bisect_left(nums, True, key=lambda n: n <= nums[-1])
+        
+        lo, hi = 0, n - 1
+
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            real = (mid + rot) % n
+
+            if nums[real] == target:
+                return real
+                
+            if nums[real] < target:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+
+        return -1
+
+
+const search = (nums, target) => {
+    let n = nums.length;
+    let rot = _.sortedIndexBy(nums, nums.at(-1), c => c <= nums.at(-1));
+    let lo = 0, hi = n - 1;
+
+    while (lo <= hi) {
+        let mid = (lo + hi) >> 1;
+        let real = (mid + rot) % n;
+
+        if (nums[real] === target)
+            return real;
+
+        if (nums[real] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+
+    return -1;
+};
+
+Solution:
+    def search(self, nums: List[int], target: int) -> int:
+
+        left = 0
+        right = len(nums) - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] >= nums[left]:
+                if nums[left] <= target <= nums[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            else:
+                if nums[mid] <= target <= nums[right]:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+        
+        return -1
+
+
 class Solution {
   public:
     void replaceElements(vector<int>& arr) {
