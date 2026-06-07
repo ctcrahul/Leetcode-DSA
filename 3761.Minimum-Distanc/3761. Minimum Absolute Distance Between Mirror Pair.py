@@ -1,3 +1,32 @@
+
+func createBinaryTree(A [][]int) *TreeNode {
+	nodes := make(map[int]*TreeNode, len(A)+1)
+	root := 0
+
+	for _, d := range A {
+		x, y := d[0], d[1]
+		if nodes[x] == nil {
+			nodes[x] = &TreeNode{Val: x}
+			root ^= x
+		}
+		if nodes[y] == nil {
+			nodes[y] = &TreeNode{Val: y}
+			root ^= y
+		}
+		if d[2] == 1 {
+			nodes[x].Left = nodes[y]
+		} else {
+			nodes[x].Right = nodes[y]
+		}
+		root ^= y
+	}
+
+	return nodes[root]
+}
+
+
+
+
 class Solution {
 public:
     TreeNode* createBinaryTree(vector<vector<int>>& A) {
