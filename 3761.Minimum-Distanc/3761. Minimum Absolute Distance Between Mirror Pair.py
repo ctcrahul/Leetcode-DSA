@@ -1,3 +1,14 @@
+AI
+⬇️
+Machine Learning
+⬇️
+Deep Learning
+⬇️
+Generative AI
+⬇️
+LLMs
+
+
 class Solution {
   public:
     bool canSeatAllPeople(int k, vector<int> &seats) {
