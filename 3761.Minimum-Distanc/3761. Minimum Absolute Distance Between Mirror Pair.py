@@ -11,6 +11,23 @@ LLMs
 
 
 
+const deleteMiddle = head => {
+    if (!head.next) return null;
+
+    let slow = head;
+    let fast = slow.next.next;
+
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    slow.next = slow.next.next;
+    return head;
+};
+
+
+
 class Solution {
 public:
     ListNode* deleteMiddle(ListNode* head) {
