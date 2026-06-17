@@ -9,6 +9,52 @@ Generative AI
 LLMs
 
 
+func processStr(s string, k int64) byte {
+    var len int64 = 0
+
+    // Step 1
+    for _, c := range s {
+        if c == '*' {
+            if len > 0 {
+                len--
+            }
+        } else if c == '#' {
+            len *= 2
+        } else if c != '%' {
+            len++
+        }
+    }
+
+    if k >= len {
+        return '.'
+    }
+
+    // Step 2
+    for i := len(s) - 1; i >= 0; i-- {
+        c := s[i]
+
+        if c == '*' {
+            len++
+        } else if c == '#' {
+            half := len / 2
+            if k >= half {
+                k -= half
+            }
+            len = half
+        } else if c == '%' {
+            k = len - 1 - k
+        } else {
+            if k == len-1 {
+                return c
+            }
+            len--
+        }
+    }
+
+    return '.'
+}
+
+
 const processStr = (s, k) => {
     const n = s.length;
     const lens = [];
