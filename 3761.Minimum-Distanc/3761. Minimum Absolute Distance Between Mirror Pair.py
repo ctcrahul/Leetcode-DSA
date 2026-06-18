@@ -9,6 +9,14 @@ Generative AI
 LLMs
 
 
+
+
+class Solution:
+    def angleClock(self, hour: int, minutes: int) -> float:
+        x = hour + minutes / 60
+        diff = (11 * x) % 12
+        return min(diff, 12 - diff) * 30
+
 func processStr(s string, k int64) byte {
     var len int64 = 0
 
