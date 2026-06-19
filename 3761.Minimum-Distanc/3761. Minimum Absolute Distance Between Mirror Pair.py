@@ -9,6 +9,19 @@ Generative AI
 LLMs
 
 
+
+class Solution:
+    def largestAltitude(self, gain: List[int]) -> int:
+        ans = acc = 0
+
+        for it in gain:
+            acc += it
+            d = acc - ans
+            ans += d & ~(d >> 0x1F)
+
+        return ans
+
+
 class Solution:
     def angleClock(self, hour: int, minutes: int) -> float:
         minute_angle = 6.0 * minutes
