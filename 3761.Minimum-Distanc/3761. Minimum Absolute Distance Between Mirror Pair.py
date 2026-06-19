@@ -10,6 +10,39 @@ LLMs
 
 
 
+class Solution {
+  public:
+    vector<int> optimalArray(vector<int> &arr) {
+        int n = arr.size();
+
+        vector<long long> pref(n + 1, 0);
+
+        for (int i = 0; i < n; i++) {
+            pref[i + 1] = pref[i] + arr[i];
+        }
+
+        vector<int> ans(n);
+
+        for (int i = 0; i < n; i++) {
+
+            int mid = i / 2;
+
+            long long median = arr[mid];
+
+            long long leftCost =
+                median * (mid + 1LL) - pref[mid + 1];
+
+            long long rightCost =
+                (pref[i + 1] - pref[mid + 1]) -
+                median * (i - mid);
+
+            ans[i] = (int)(leftCost + rightCost);
+        }
+
+        return ans;
+    }
+};
+
 class Solution:
     def largestAltitude(self, gain: List[int]) -> int:
         ans = acc = 0
