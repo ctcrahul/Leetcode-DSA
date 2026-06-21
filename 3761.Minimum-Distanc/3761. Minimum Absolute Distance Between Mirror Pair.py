@@ -9,6 +9,11 @@ Generative AI
 LLMs
 
 
+class Solution:
+    def maxIceCream(self, costs: List[int], coins: int) -> int:
+
+		
+
 class Solution {
     public int maxBuilding(int num, int[][] restrictions) {
         List<int[]> r = new ArrayList<>(Arrays.asList(restrictions));
