@@ -14,6 +14,20 @@ LLMs
 ...
 
 
+ft_preds = []
+for _, row in test_df.iterrows():
+    emb1 = finetuned_model.encode(row['resume_text'])
+    emb2 = finetuned_model.encode(row['job_description'])
+    sim  = cosine_similarity([emb1], [emb2])[0][0]
+    ft_preds.append(float(sim))
+
+ft_mae  = mean_absolute_error(test_df['match_score'], ft_preds)
+ft_rmse = np.sqrt(mean_squared_error(test_df['match_score'], ft_preds))
+
+print(f'\nFine-tuned Model — Test Set Performance')
+print(f'  MAE:  {ft_mae:.4f}')
+print(f'  RMSE: {ft_rmse:.4f}')
+
 
 # Side-by-side comparison
 print('=' * 50)
