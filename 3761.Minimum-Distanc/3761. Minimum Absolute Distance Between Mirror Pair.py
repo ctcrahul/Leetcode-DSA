@@ -14,6 +14,30 @@ LLMs
 ...
 
 
+# Scatter plots: base vs fine-tuned
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+colors = test_df['match_label'].map({'low':'red','medium':'orange','high':'green'})
+
+for ax, preds, title, mae in [
+    (axes[0], base_preds, 'Base Model', base_mae),
+    (axes[1], ft_preds,   'Fine-tuned Model', ft_mae),
+]:
+    ax.scatter(test_df['match_score'], preds, c=colors, alpha=0.7)
+    ax.plot([0,1],[0,1],'k--', label='Perfect')
+    ax.set_xlabel('Ground Truth match_score')
+    ax.set_ylabel('Predicted Similarity')
+    ax.set_title(f'{title} (MAE: {mae:.4f})', fontweight='bold')
+    ax.grid(True, alpha=0.3)
+
+from matplotlib.patches import Patch
+fig.legend(handles=[
+    Patch(color='green', label='high'),
+    Patch(color='orange', label='medium'),
+    Patch(color='red', label='low'),
+], loc='lower center', ncol=3)
+plt.tight_layout()
+plt.show()
+
 metadata = {
     'base_model':       'all-mpnet-base-v2',
     'dataset':          'merged_dataset_clean.csv',
