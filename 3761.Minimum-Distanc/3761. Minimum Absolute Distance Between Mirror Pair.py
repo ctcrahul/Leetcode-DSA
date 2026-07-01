@@ -14,6 +14,16 @@ LLMs
 ...
 
 
+
+# Side-by-side comparison
+print('=' * 50)
+print('MODEL COMPARISON')
+print('=' * 50)
+print(f'  Base MAE:         {base_mae:.4f}')
+print(f'  Fine-tuned MAE:   {ft_mae:.4f}')
+print(f'  Improvement:      {(base_mae - ft_mae)/base_mae*100:.1f}%')
+print('=' * 50)
+
 # Scatter plots: base vs fine-tuned
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 colors = test_df['match_label'].map({'low':'red','medium':'orange','high':'green'})
