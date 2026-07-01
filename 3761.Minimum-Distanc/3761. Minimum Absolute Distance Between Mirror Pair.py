@@ -14,6 +14,26 @@ LLMs
 ...
 
 
+metadata = {
+    'base_model':       'all-mpnet-base-v2',
+    'dataset':          'merged_dataset_clean.csv',
+    'total_pairs':      len(df),
+    'train_pairs':      len(train_df),
+    'val_pairs':        len(val_df),
+    'test_pairs':       len(test_df),
+    'epochs':           10,
+    'batch_size':       16,
+    'base_mae':         round(float(base_mae), 4),
+    'finetuned_mae':    round(float(ft_mae), 4),
+    'improvement_pct':  round((base_mae - ft_mae) / base_mae * 100, 2),
+}
+
+with open('models/finetuned-bert/metadata.json', 'w') as f:
+    json.dump(metadata, f, indent=2)
+
+print('Saved: models/finetuned-bert/')
+print(json.dumps(metadata, indent=2))
+
 #Production Pipeline Test
 
 def score_resume_against_jd(resume_text, jd_text, model):
