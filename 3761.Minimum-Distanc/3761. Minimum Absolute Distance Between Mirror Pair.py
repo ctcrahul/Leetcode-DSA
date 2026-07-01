@@ -14,6 +14,43 @@ LLMs
 ...
 
 
+#Production Pipeline Test
+
+def score_resume_against_jd(resume_text, jd_text, model):
+ 
+    emb_resume = model.encode(resume_text, convert_to_numpy=True)
+    emb_jd     = model.encode(jd_text,     convert_to_numpy=True)
+    score      = cosine_similarity([emb_resume], [emb_jd])[0][0]
+    return float(score)
+
+
+# Test with realistic cases
+test_cases = [
+    {
+        'label':  'HIGH match expected',
+        'resume': 'Senior Python developer with 6 years experience. Built REST APIs using FastAPI and Django. Proficient in PostgreSQL, Docker, and AWS deployment.',
+        'jd':     'We need a Python backend engineer with FastAPI or Django experience. Must know SQL databases and cloud deployment.',
+    },
+    {
+        'label':  'MEDIUM match expected',
+        'resume': 'Frontend developer with 3 years React and TypeScript experience. Some Node.js and Express for small APIs.',
+        'jd':     'Full stack engineer needed. React frontend required, strong Python backend preferred. 4+ years experience.',
+    },
+    {
+        'label':  'LOW match expected',
+        'resume': 'Executive Chef with 12 years experience in fine dining. Expert in French cuisine, menu planning, and kitchen management.',
+        'jd':     'Data Scientist with Python, machine learning, and SQL experience required.',
+    },
+]
+
+print('Production Pipeline Test')
+print('=' * 60)
+for case in test_cases:
+    score = score_resume_against_jd(case['resume'], case['jd'], finetuned_model)
+    label = 'HIGH' if score > 0.70 else 'MEDIUM' if score > 0.45 else 'LOW'
+    print(f"\n{case['label']}")
+    print(f"  Predicted score: {score:.4f}  →  {label}")
+
 class Solution {
     public int numberOfSubstrings(String s) {
         int res = 0;
