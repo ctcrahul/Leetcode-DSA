@@ -13,6 +13,22 @@ LLMs
 
 ...
 
+class Solution:
+     def maxCharGap(self, s):
+          # code here
+          st = {}
+          n = len(s)
+          max_gap = -1
+          for i in range(n):
+               if s[i] in st:
+                    gap = i - st[s[i]] - 1
+                    max_gap = max(max_gap, gap)
+               else:
+                    st[s[i]] = i
+          return max_gap
+
+
+
 
 const minScore = (n, roads) => {
     const root = [...Array(n + 1).keys()];
