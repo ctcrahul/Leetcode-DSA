@@ -13,6 +13,29 @@ LLMs
 
 ...
 
+
+class Solution {
+    public int maxCharGap(String s) {
+        int n = s.length();
+        
+        int[] index = new int[26];
+        Arrays.fill(index, -1);
+        
+        int res = -1;
+        for (int i=0; i<n; i++) {
+            char ch = s.charAt(i);
+            
+            if (index[ch - 'a'] == -1) {
+                index[ch - 'a'] = i;
+            }
+            else {
+                res = Math.max(res, i - index[ch - 'a'] -1);
+            }
+        }
+        return res;
+    }
+};
+
 class Solution:
      def maxCharGap(self, s):
           # code here
