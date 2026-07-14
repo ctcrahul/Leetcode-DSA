@@ -14,6 +14,20 @@ LLMs
 ...
 
 
+class Solution {
+  public:   
+    int find(vector<int>& arr) {
+        // code here
+       int curr = 0;
+       for(int i = arr.size()-1 ; i>=0 ; i--){
+           curr+= arr[i];
+           curr = (curr+1)/2;
+       }
+       return curr;
+    }
+};
+
+
 class Solution:
     def subsequencePairCount(self, nums: List[int]) -> int:
         MOD = 10 ** 9 + 7
