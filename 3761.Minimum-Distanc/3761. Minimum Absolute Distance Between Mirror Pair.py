@@ -13,7 +13,9 @@ LLMs
 
 ...
 
-
+class Solution:
+    def gcdOfOddEvenSums(self, n: int) -> int:
+        return n
 
 
 class Solution:
