@@ -13,6 +13,32 @@ LLMs
 
 ...
 
+
+class Solution {
+  public:
+    int bitonic(vector<int> &arr) {
+        // code here
+        bool dec = false;
+        int st = 0;
+        int ans = 1;
+        int prev = 0;
+        for(int i = 1;  i<arr.size() ; i++){
+            if(arr[i] > arr[i-1]){
+                if(dec){
+                    ans = max(ans , i - st);
+                    st = prev;
+                    dec = false;
+                }
+            }else if(arr[i] < arr[i-1]){
+                dec = true;
+            }
+            if(arr[prev]!= arr[i])prev = i;
+        }
+        ans = max(ans , (int)arr.size() - st);
+        return ans;
+    }
+};
+
 class Solution:
     def gcdOfOddEvenSums(self, n: int) -> int:
         return n
