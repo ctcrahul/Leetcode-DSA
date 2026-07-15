@@ -14,6 +14,12 @@ LLMs
 ...
 
 
+function gcdOfOddEvenSums(n) {
+    return n;
+}
+
+
+
 class Solution {
 
     public int gcdOfOddEvenSums(int n) {
