@@ -17,6 +17,47 @@ LLMs
 
 
 
+func uniqueXorTriplets(nums []int) int {
+	const MAX_XOR = 2048
+
+	present := make([]bool, MAX_XOR)
+	for _, x := range nums {
+		present[x] = true
+	}
+
+	dp := make([]bool, MAX_XOR)
+	dp[0] = true
+
+	for step := 0; step < 3; step++ {
+		next := make([]bool, MAX_XOR)
+
+		for cur := 0; cur < MAX_XOR; cur++ {
+			if !dp[cur] {
+				continue
+			}
+
+			for v := 0; v < MAX_XOR; v++ {
+				if present[v] {
+					next[cur^v] = true
+				}
+			}
+		}
+
+		dp = next
+	}
+
+	ans := 0
+	for _, ok := range dp {
+		if ok {
+			ans++
+		}
+	}
+
+	return ans
+}
+
+
+
 class Solution {
     public int uniqueXorTriplets(int[] nums) {
         final int MAX_XOR = 2048;
