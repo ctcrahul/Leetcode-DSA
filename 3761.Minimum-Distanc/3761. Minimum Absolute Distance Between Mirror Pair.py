@@ -15,6 +15,35 @@ LLMs
 ...........
 
 
+
+
+class Solution:
+    def uniqueXorTriplets(self, nums: List[int]) -> int:
+        MAX_XOR = 2048
+
+        present = [False] * MAX_XOR
+        for x in nums:
+            present[x] = True
+
+        dp = [False] * MAX_XOR
+        dp[0] = True
+
+        for _ in range(3):
+            nxt = [False] * MAX_XOR
+
+            for cur in range(MAX_XOR):
+                if not dp[cur]:
+                    continue
+
+                for v in range(MAX_XOR):
+                    if present[v]:
+                        nxt[cur ^ v] = True
+
+            dp = nxt
+
+        return sum(dp)
+		
+
 	class Solution {
 public:
     int uniqueXorTriplets(vector<int>& nums) {
