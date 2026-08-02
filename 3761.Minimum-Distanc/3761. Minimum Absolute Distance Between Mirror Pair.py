@@ -16,6 +16,11 @@ LLMs
 
 
 
+bool stoneGame(int* piles, int pilesSize) { return 1; }
+
+
+
+
 class Solution {
 public:
     bool stoneGame(vector<int>& piles) { return 1; }
