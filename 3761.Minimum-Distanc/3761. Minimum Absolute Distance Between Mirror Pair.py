@@ -16,6 +16,10 @@ LLMs
 
 
 
+const stoneGame = A => 1;
+
+
+
 func stoneGame(A []int) bool {
 	return len(A)&1 == 0
 }
