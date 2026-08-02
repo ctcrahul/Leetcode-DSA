@@ -15,6 +15,14 @@ LLMs
 ...........
 
 
+
+class Solution:
+    def stoneGame(self, piles: List[int]) -> bool:
+        return True
+
+
+		
+	
 	class Solution {
   public:
     int findMax(int n, vector<int>& a, vector<int>& b, vector<int>& k) {
