@@ -16,6 +16,13 @@ LLMs
 
 
 
+func stoneGame(A []int) bool {
+	return len(A)&1 == 0
+}
+
+
+
+
 bool stoneGame(int* piles, int pilesSize) { return 1; }
 
 
