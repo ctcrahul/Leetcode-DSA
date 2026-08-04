@@ -16,6 +16,39 @@ LLMs
 
 
 
+func findMissingElements(nums []int) []int {
+
+	mn, mx := nums[0], nums[0]
+
+	seen := make(map[int]bool)
+
+	for _, x := range nums {
+
+		if x < mn {
+			mn = x
+		}
+
+		if x > mx {
+			mx = x
+		}
+
+		seen[x] = true
+	}
+
+	ans := []int{}
+
+	for x := mn + 1; x < mx; x++ {
+
+		if !seen[x] {
+			ans = append(ans, x)
+		}
+	}
+
+	return ans
+}
+
+
+
 class Solution {
 public:
     vector<int> findMissingElements(vector<int>& nums) {
